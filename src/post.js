@@ -1,5 +1,5 @@
   // Get a reference to the database service
-const database = app.database();
+const database = firebase.database();
 
 const td = new Date();
 const today = ""+td.getFullYear() +"_"+ (td.getMonth()+1)+"_" + td.getDate() + "/";
