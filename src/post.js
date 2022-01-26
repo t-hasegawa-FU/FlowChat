@@ -1,6 +1,3 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.4/firebase-app.js";
-import { } from "https://www.gstatic.com/firebasejs/9.6.4/firebase-database.js"
-
 const firebaseConfig = {
   apiKey: "AIzaSyAYogMcVUqjPkbrltK02NGe_cGQlmO04AY",
   authDomain: "haselab-flow-chat.firebaseapp.com",
