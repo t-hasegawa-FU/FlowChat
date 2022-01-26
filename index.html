@@ -5,8 +5,12 @@
     <title>Flow Chat</title>
   </head>
   <body>
-    <img src="images/firefox-icon.png" alt="My test image">
-    <script type="module" src="src/index.js"></script>
+    <div>
+      <h1>FlowChat for Web</h1>
+      <button onclick="location.href='./ShowPage/ShowPage.html'">コメント視聴画面</button>
+      <button onclick="location.href='./PostPage/PostPage.html'">コメント投稿画面(学内者用)</button>
+      <button onclick="location.href='./PostPage_Guest/PostPage_Guest.html'">コメント投稿画面(ゲスト用)</button>
+    </div>
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.4/firebase-app.js";
