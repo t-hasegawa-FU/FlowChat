@@ -2,25 +2,25 @@
 ウェブページを起動したときの時間を記録，
 これにより起動以前のコメントが流れないようにする．
 */
-var date = new Date();
-var launchTime = date.getTime();
-var database = firebase.database();
+const date = new Date();
+const launchTime = date.getTime();
+const database = firebase.database();
 
 const td = new Date();
 const today = ""+td.getFullYear() +"_"+ (td.getMonth()+1)+"_" + td.getDate() + "/";
 
 //動的に要素を追加するための準備
-var div = document.createElement("div");
+let div = document.createElement("div");
 
 div.className = "marquee";
 
-var commentLog = document.createElement("div");
+let commentLog = document.createElement("div");
 
 commentLog.id = "commentLog";
 
-var table = document.createElement( 'table' );
+let table = document.createElement( 'table' );
 
-var msgArray = [];
+let msgArray = [];
 let cmtLimit = 30;//表示されるコメント最大数
 
 document.body.appendChild(div);
@@ -31,7 +31,7 @@ commentLog.appendChild(table);
 
 //チャット表示など
 function showChat(msg){
-  var p = document.createElement("p");
+  let p = document.createElement("p");
   p.textContent = msg.comment;
 
   let cmtPos = getRandomInt(0,document.body.clientHeight-100);
@@ -65,7 +65,7 @@ function getRandomInt(min, max) {
 
 //受信処理
 database.ref("comments/"+today).on("child_added", function(data) {
-  var msg = data.val();//msgオブジェクト(comment, timeStampが入ってる)
+  let msg = data.val();//msgオブジェクト(comment, timeStampが入ってる)
   //自分が起動してからのコメントのみを取得・表示する
 
     if(msg.timeStamp >= launchTime){ 
