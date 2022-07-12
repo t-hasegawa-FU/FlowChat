@@ -4,6 +4,7 @@ const database = firebase.database();
 const td = new Date();
 const today = ""+td.getFullYear() +"_"+ (td.getMonth()+1)+"_" + td.getDate() + "/";
 let logInUser = "none";
+const colors = ["#d2691e", "#ff0000", "#0000ff", "#000000"]
 
 
 //以下でログイン処理を行う，学生の手間を省くため自動でログインするようになっている．
@@ -38,6 +39,7 @@ function writeUserData(comment) {
     let date = new Date();
     let time = date.getTime();
     let txtColor = document.getElementById("strColor").value;
+    if (txtColor === "random") txtColor = getRandomColor();
     database.ref("comments/"+today).push({
         comment: comment,
         timeStamp: time,
@@ -47,6 +49,10 @@ function writeUserData(comment) {
   
   }
   
+function getRandomColor() {
+    const rnd = Math.floor(Math.random() * colors.length);
+    return colors[rnd];
+}
   
   //ボタンでdatabaseに送信
   document.getElementById("sendButton").onclick =function (e){
