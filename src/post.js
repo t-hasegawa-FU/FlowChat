@@ -38,6 +38,7 @@ function writeUserData(comment) {
     let date = new Date();
     let time = date.getTime();
     let txtColor = document.getElementById("strColor").value;
+    if (txtColor === "random") txtColor = getRandomColor();
     database.ref("comments/"+today).push({
         comment: comment,
         timeStamp: time,
@@ -47,6 +48,10 @@ function writeUserData(comment) {
   
   }
   
+function getRandomColor() {
+    const rnd = Math.floor(Math.random() * colors.length);
+    return colors[rnd];
+}
   
   //ボタンでdatabaseに送信
   document.getElementById("sendButton").onclick =function (e){
