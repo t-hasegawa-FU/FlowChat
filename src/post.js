@@ -26,7 +26,8 @@ window.onload = function(){
       provider.setCustomParameters({
         hd: 'g.u-fukui.ac.jp'
       });
-      firebase.auth().signInWithRedirect(provider);
+      //firebase.auth().signInWithRedirect(provider);
+      firebase.auth().signInWithPopup(provider);
     }
     });
 }
