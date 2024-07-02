@@ -7,7 +7,7 @@ let logInUser = "none";
 const colors = ["#d2691e", "#ff0000", "#0000ff", "#000000"]
 
 
-//以下でログイン処理を行う，学生の手間を省くため自動でログインするようになっている．
+//以下でログイン処理を行う，ポップアップログインに変更（Firebaseの仕様変更）．
 window.onload = function(){
   firebase.auth().getRedirectResult().then(function(result) {
     logInUser = result.user;
@@ -26,7 +26,6 @@ window.onload = function(){
       provider.setCustomParameters({
         hd: 'g.u-fukui.ac.jp'
       });
-      //firebase.auth().signInWithRedirect(provider);
       firebase.auth().signInWithPopup(provider);
     }
     });
