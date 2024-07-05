@@ -32,6 +32,7 @@ window.onload = function(){
     }
   });
 
+
   //realtime databaseに書き込む
 function writeUserData(comment) {
     let date = new Date();
