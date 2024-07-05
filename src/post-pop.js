@@ -41,17 +41,13 @@ window.onload = function(){
       });
       firebase.auth().signInWithPopup(provider)
           .then((result) => {
-              alert("test1");
+              alert(result);
               const user = result.user;
+              alert(user);
               document.getElementById("User").innerText = user + "でログインしています．";
           }).catch((error) => {
-              alert("test2");
               const errorCode = error.code;
-              alert(errorCode);
               const errorMessage = error.message;
-              alert(errorMessage);
-              const email = error.customData.email;
-              alert(email);
               document.getElementById("User").innerText = errorCode + " : " + errorMessage;
           });
   }
