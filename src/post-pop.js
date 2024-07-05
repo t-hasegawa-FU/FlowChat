@@ -7,6 +7,7 @@ let logInUser = "none";
 const colors = ["#d2691e", "#ff0000", "#0000ff", "#000000"]
 
 
+/*
 //以下でログイン処理を行う，ポップアップログインに変更（Firebaseの仕様変更）．
 window.onload = function(){
   firebase.auth().getRedirectResult().then(function(result) {
@@ -30,8 +31,12 @@ window.onload = function(){
     }
     });
 }
-
-
+*/
+  //ボタンでGoogle Auth
+  document.getElementById("logginButton").onclick =function (e){
+      alert("test");
+      document.getElementById("User").innerText = "test message";
+  }
 
 
   //realtime databaseに書き込む
