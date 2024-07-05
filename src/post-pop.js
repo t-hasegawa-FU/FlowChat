@@ -47,8 +47,11 @@ window.onload = function(){
           }).catch((error) => {
               alert("test2");
               const errorCode = error.code;
+              alert(errorCode);
               const errorMessage = error.message;
+              alert(errorMessage);
               const email = error.customData.email;
+              alert(email);
               document.getElementById("User").innerText = errorCode + " : " + errorMessage;
           });
   }
