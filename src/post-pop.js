@@ -8,14 +8,13 @@ const colors = ["#d2691e", "#ff0000", "#0000ff", "#000000"]
 
 //以下でログイン処理を行う，ポップアップログインに変更（Firebaseの仕様変更）．
 window.onload = function(){
-      alert("test");
       let provider = new firebase.auth.GoogleAuthProvider();
       provider.setCustomParameters({
         hd: 'g.u-fukui.ac.jp'
       });
       firebase.auth().signInWithPopup(provider)
           .then((result) => {
-              document.getElementById("User").innerText = "ログインしています．";
+              
           }).catch((error) => {
               const errorCode = error.code;
               const errorMessage = error.message;
