@@ -15,16 +15,23 @@ window.onload = function(){
       });
       firebase.auth().signInWithPopup(provider)
           .then((result) => {
-              alert(result);
-              const user = result.user;
-              alert(firebase.auth.user);
-              document.getElementById("User").innerText = user + "でログインしています．";
+              document.getElementById("User").innerText = "ログインしています．";
           }).catch((error) => {
               const errorCode = error.code;
               const errorMessage = error.message;
               document.getElementById("User").innerText = errorCode + " : " + errorMessage;
           });
 }
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+        const message = `${user.displayName}でログインしています`;
+        document.getElementById('User').innerHTML =  message;
+        console.log('ログインしています');
+    } else {
+          const message = `Failed ?`;
+          document.getElementById('User').innerHTML = message;
+    }
+  });
 
   //realtime databaseに書き込む
 function writeUserData(comment) {
