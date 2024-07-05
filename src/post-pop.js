@@ -35,19 +35,14 @@ window.onload = function(){
   //ボタンでGoogle Auth
   document.getElementById("logginButton").onclick =function (e){
       alert("test");
-      const provider = new GoogleAuthProvider();
-      const auth = get Auth();
-      signInWithPopup(auth, provider)
+      firebase.auth().signInWithPopup(provider)
           .then((result) => {
-              const credential = GoogleAuthProvider.credentialFromResult(result);
-              const token = credential.accessToken;
               const user = result.user;
               document.getElementById("User").innerText = user + "でログインしています．";
           }).catch((error) => {
               const errorCode = error.code;
               const errorMessage = error.message;
               const email = error.customData.email;
-              const credential = GoogleAuthProvider.credentialFromError(error);
               document.getElementById("User").innerText = errorCode + " : " + errorMessage;
           });
   }
