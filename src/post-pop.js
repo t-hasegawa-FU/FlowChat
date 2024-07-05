@@ -35,6 +35,10 @@ window.onload = function(){
   //ボタンでGoogle Auth
   document.getElementById("logginButton").onclick =function (e){
       alert("test");
+      let provider = new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({
+        hd: 'g.u-fukui.ac.jp'
+      });
       firebase.auth().signInWithPopup(provider)
           .then((result) => {
               const user = result.user;
