@@ -2,7 +2,7 @@ body{
     text-align: center;
 }
 
-div#caution { 
+.caution { 
     padding: 10px;
     border: 1px solid #333;
     background: #f2f2f2;
