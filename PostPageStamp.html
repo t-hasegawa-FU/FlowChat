@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8" content="width=device-width, initial-scale=1.0">
+        <title>Flow Chat スタンプ投稿</title>
+        <link rel="stylesheet" href="./css/main.css">
+        <style>
+            .stamp-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+                max-width: 480px;
+                margin: 16px auto;
+            }
+            .stamp-btn {
+                font-size: 2rem;
+                padding: 12px 4px 6px;
+                border: 2px solid #ccc;
+                border-radius: 12px;
+                background: #fafafa;
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+                transition: background 0.15s, transform 0.1s;
+            }
+            .stamp-btn span.label {
+                font-size: 0.7rem;
+                color: #555;
+            }
+            .stamp-btn:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
+            .stamp-btn:not(:disabled):hover {
+                background: #e8f0ff;
+                border-color: #88a;
+            }
+            .stamp-btn:not(:disabled):active {
+                transform: scale(0.93);
+                background: #d0e4ff;
+            }
+            #toast {
+                position: fixed;
+                bottom: 24px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #333;
+                color: #fff;
+                padding: 8px 20px;
+                border-radius: 20px;
+                font-size: 0.9rem;
+                opacity: 0;
+                transition: opacity 0.3s;
+                pointer-events: none;
+            }
+            #toast.show {
+                opacity: 1;
+            }
+        </style>
+    </head>
+    <body>
+
+        <h1>FlowChat スタンプ投稿</h1>
+
+        <div id="User">
+            <p>ログインしていません</p>
+        </div>
+
+        <p>
+            <button id="loginButton">Googleアカウントでログイン</button>
+        </p>
+
+        <div class="stamp-grid" id="stampGrid">
+            <button class="stamp-btn" disabled data-text="👍 わかった！">
+                👍<span class="label">わかった！</span>
+            </button>
+            <button class="stamp-btn" disabled data-text="❓ 質問があります">
+                ❓<span class="label">質問</span>
+            </button>
+            <button class="stamp-btn" disabled data-text="🤔 よくわかりません">
+                🤔<span class="label">わからない</span>
+            </button>
+            <button class="stamp-btn" disabled data-text="🔄 もう一度お願いします">
+                🔄<span class="label">もう一度</span>
+            </button>
+            <button class="stamp-btn" disabled data-text="💡 なるほど！">
+                💡<span class="label">なるほど！</span>
+            </button>
+            <button class="stamp-btn" disabled data-text="✏️ メモ中です">
+                ✏️<span class="label">メモ中</span>
+            </button>
+            <button class="stamp-btn" disabled data-text="📖 読んでいます">
+                📖<span class="label">読んでます</span>
+            </button>
+            <button class="stamp-btn" disabled data-text="✅ 了解しました">
+                ✅<span class="label">了解</span>
+            </button>
+            <button class="stamp-btn" disabled data-text="🐢 ゆっくりお願いします">
+                🐢<span class="label">ゆっくり</span>
+            </button>
+            <button class="stamp-btn" disabled data-text="⚡ 速すぎます">
+                ⚡<span class="label">速すぎ</span>
+            </button>
+            <button class="stamp-btn" disabled data-text="😄 おもしろい！">
+                😄<span class="label">おもしろい</span>
+            </button>
+            <button class="stamp-btn" disabled data-text="😴 眠いです">
+                😴<span class="label">眠い</span>
+            </button>
+            <button class="stamp-btn" disabled data-text="👏 すごい！">
+                👏<span class="label">すごい！</span>
+            </button>
+            <button class="stamp-btn" disabled data-text="☕ 休憩したいです">
+                ☕<span class="label">休憩したい</span>
+            </button>
+            <button class="stamp-btn" disabled data-text="🙋 発表します">
+                🙋<span class="label">発表します</span>
+            </button>
+            <button class="stamp-btn" disabled data-text="🎉 できました！">
+                🎉<span class="label">できました！</span>
+            </button>
+        </div>
+
+        <div id="toast"></div>
+
+        <a href="./index.html">home</a>
+
+        <!--本ページの処理の読み込み-->
+        <script defer src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script defer src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
+        <script defer src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+        <script defer src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+        <script defer src="./src/init-firebase.js"></script>
+        <script defer src="./src/post-stamp.js"></script>
+
+    </body>
+</html>
