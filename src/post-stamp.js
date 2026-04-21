@@ -6,6 +6,7 @@ let logInUser = "none";
 const colors = ["#d2691e", "#ff0000", "#0000ff", "#000000"];
 
 const loginButton = document.getElementById("loginButton");
+const sendButton = document.getElementById("sendButton");
 const userDiv = document.getElementById("User");
 const stampButtons = document.querySelectorAll(".stamp-btn");
 const toast = document.getElementById("toast");
@@ -14,6 +15,7 @@ function onLoggedIn(user) {
     logInUser = user.displayName;
     userDiv.innerText = user.displayName + " でログインしています";
     loginButton.style.display = "none";
+    sendButton.disabled = false;
     stampButtons.forEach(btn => btn.disabled = false);
 }
 
@@ -21,6 +23,7 @@ function onLoggedOut() {
     logInUser = "none";
     userDiv.innerText = "ログインしていません";
     loginButton.style.display = "inline-block";
+    sendButton.disabled = true;
     stampButtons.forEach(btn => btn.disabled = true);
 }
 
@@ -47,10 +50,9 @@ function getRandomColor() {
     return colors[rnd];
 }
 
-function writeStamp(text) {
+function writeComment(text, txtColor) {
     const date = new Date();
     const time = date.getTime();
-    const txtColor = getRandomColor();
     database.ref("comments/" + today).push({
         comment: text,
         timeStamp: time,
@@ -65,10 +67,19 @@ function showToast(text) {
     setTimeout(() => toast.classList.remove("show"), 1500);
 }
 
+sendButton.onclick = function () {
+    const input_message = document.getElementById("input_message").value;
+    if (input_message.trim() === "") return;
+    let txtColor = document.getElementById("strColor").value;
+    if (txtColor === "random") txtColor = getRandomColor();
+    writeComment(input_message, txtColor);
+    document.getElementById("input_message").value = "";
+};
+
 stampButtons.forEach(btn => {
     btn.addEventListener("click", () => {
         const text = btn.dataset.text;
-        writeStamp(text);
+        writeComment(text, getRandomColor());
         showToast(text);
     });
 });
