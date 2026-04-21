@@ -29,7 +29,8 @@ commentLog.appendChild(table);
 const stampEmojis = [
     "👍", "❓", "🤔", "🔄", "💡",
     "✏️", "📖", "✅", "🐢", "⚡",
-    "😄", "😴", "👏", "☕", "🙋", "🎉"
+    "😄", "😴", "👏", "☕", "🙋", "🎉",
+    "🍅", "🍄", "🍛", "🤪"
 ];
 
 function isStamp(text) {
@@ -37,9 +38,14 @@ function isStamp(text) {
 }
 
 function extractEmoji(text) {
-    // 先頭の絵文字部分だけ取り出す（最初のスペースの前まで）
     const match = text.match(/^(\S+)/);
     return match ? match[1] : text;
+}
+
+function extractLabel(text) {
+    // 先頭の絵文字より後ろのテキストを返す（スペース含む）
+    const match = text.match(/^\S+\s*(.*)/s);
+    return match ? match[1].trim() : "";
 }
 
 // スタンプアニメーション（ユーザー名は表示しない）
@@ -54,8 +60,16 @@ function showStamp(msg) {
     const emojiDiv = document.createElement("div");
     emojiDiv.className = "stamp-emoji";
     emojiDiv.textContent = extractEmoji(msg.comment);
-
     popup.appendChild(emojiDiv);
+
+    const label = extractLabel(msg.comment);
+    if (label) {
+        const labelDiv = document.createElement("div");
+        labelDiv.className = "stamp-label";
+        labelDiv.textContent = label;
+        popup.appendChild(labelDiv);
+    }
+
     document.body.appendChild(popup);
 
     popup.addEventListener("animationend", () => {
@@ -107,7 +121,6 @@ database.ref("comments/" + today).on("child_added", function (data) {
     if (msg.timeStamp >= launchTime) {
         if (isStamp(msg.comment)) {
             showStamp(msg);
-            addToLog(msg);
         } else {
             showChat(msg);
         }
