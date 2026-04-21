@@ -1,14 +1,29 @@
+/*
+ウェブページを起動したときの時間を記録，
+これにより起動以前のコメントが流れないようにする．
+*/
+const date = new Date();
+const launchTime = date.getTime();
 const database = firebase.database();
 
 const td = new Date();
 const today = "" + td.getFullYear() + "_" + (td.getMonth() + 1) + "_" + td.getDate() + "/";
-const launchTime = new Date().getTime();
 
-const marquee  = document.getElementById("marquee");
-const logTable = document.getElementById("logTable");
+// 動的に要素を追加するための準備（show.js と同じ構造）
+let div = document.createElement("div");
+div.className = "marquee";
 
-let msgCount = 0;
-const MSG_LIMIT = 30;
+let commentLog = document.createElement("div");
+commentLog.id = "commentLog";
+
+let table = document.createElement("table");
+
+let msgArray = [];
+let cmtLimit = 30; // 表示されるコメント最大数
+
+document.body.appendChild(div);
+div.appendChild(commentLog);
+commentLog.appendChild(table);
 
 // スタンプとして扱う先頭絵文字の一覧
 const stampEmojis = [
@@ -22,17 +37,17 @@ function isStamp(text) {
 }
 
 function extractEmoji(text) {
-    // 先頭の絵文字だけを取り出す（空白の前まで）
+    // 先頭の絵文字部分だけ取り出す（最初のスペースの前まで）
     const match = text.match(/^(\S+)/);
     return match ? match[1] : text;
 }
 
-// ---- スタンプアニメーション ----
-function showStampAnimation(msg) {
+// スタンプアニメーション（ユーザー名は表示しない）
+function showStamp(msg) {
     const popup = document.createElement("div");
     popup.className = "stamp-popup";
 
-    // ランダムな横位置（画面幅の10%〜80%）
+    // ランダムな横位置（画面幅の10%〜80%の範囲）
     const xPos = Math.random() * (window.innerWidth * 0.7) + window.innerWidth * 0.1;
     popup.style.left = xPos + "px";
 
@@ -40,69 +55,78 @@ function showStampAnimation(msg) {
     emojiDiv.className = "stamp-emoji";
     emojiDiv.textContent = extractEmoji(msg.comment);
 
-    const userDiv = document.createElement("div");
-    userDiv.className = "stamp-user";
-    userDiv.textContent = msg.user || "";
-
     popup.appendChild(emojiDiv);
-    popup.appendChild(userDiv);
     document.body.appendChild(popup);
 
-    // アニメーション終了後に要素を削除
     popup.addEventListener("animationend", () => {
-        document.body.removeChild(popup);
+        if (document.body.contains(popup)) document.body.removeChild(popup);
     });
 }
 
-// ---- 通常テキストの横スクロール ----
-function showScrollText(msg) {
-    const p = document.createElement("p");
+// 通常テキストの横スクロール（show.js の showChat と同じ挙動）
+function showChat(msg) {
+    let p = document.createElement("p");
     p.textContent = msg.comment;
 
-    const yPos = Math.random() * (window.innerHeight - 100);
-    p.style.top = yPos + "px";
+    let cmtPos = getRandomInt(0, document.body.clientHeight - 100);
+    if (cmtPos > document.body.clientHeight) {
+        cmtPos = document.body.clientHeight - 100;
+    }
+    p.style.top = cmtPos + "px";
     p.style.color = msg.txtColor;
 
-    marquee.appendChild(p);
-    msgCount++;
+    msgArray.push(msg.comment);
+    console.log(msgArray);
+    div.appendChild(p);
 
-    if (msgCount > MSG_LIMIT) {
-        // 古いメッセージを削除（最初のp要素）
-        const first = marquee.querySelector("p");
-        if (first) marquee.removeChild(first);
-        msgCount--;
+    let newrow = table.insertRow(0);
+    let newCell = newrow.insertCell();
+    newCell.appendChild(document.createTextNode(msg.comment));
+
+    if (msgArray.length >= cmtLimit) {
+        div.removeChild(div.children[2]);
     }
-
-    p.addEventListener("animationend", () => {
-        if (marquee.contains(p)) marquee.removeChild(p);
-        msgCount = Math.max(0, msgCount - 1);
-    });
 }
 
-// ---- ログテーブルへ追記 ----
+// ログへの追記（スタンプも通常テキストも記録）
 function addToLog(msg) {
-    const row = logTable.insertRow(0);
-    const cell = row.insertCell();
-    cell.textContent = (msg.user || "") + ": " + msg.comment;
+    let newrow = table.insertRow(0);
+    let newCell = newrow.insertCell();
+    newCell.appendChild(document.createTextNode(msg.comment));
 }
 
-// ---- Firebase 受信 ----
-database.ref("comments/" + today).on("child_added", (data) => {
-    const msg = data.val();
-    if (msg.timeStamp < launchTime) return;
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
 
-    if (isStamp(msg.comment)) {
-        showStampAnimation(msg);
-    } else {
-        showScrollText(msg);
+// 受信処理
+database.ref("comments/" + today).on("child_added", function (data) {
+    let msg = data.val();
+    if (msg.timeStamp >= launchTime) {
+        if (isStamp(msg.comment)) {
+            showStamp(msg);
+            addToLog(msg);
+        } else {
+            showChat(msg);
+        }
     }
-    addToLog(msg);
 });
 
-// ---- Shiftキーでログ表示切替 ----
+// シフトボタンでログ表示 or 非表示（show.js と同じ）
 document.addEventListener("keydown", (event) => {
-    if (event.code === "ShiftLeft" || event.code === "ShiftRight") {
-        const log = document.getElementById("commentLog");
-        log.style.visibility = log.style.visibility === "visible" ? "hidden" : "visible";
+    let keyName = event.code;
+    let tableDiv = document.getElementById("commentLog");
+
+    if (keyName === "ShiftLeft" || keyName === "ShiftRight") {
+        if (tableDiv.style.visibility !== "hidden") {
+            tableDiv.style.visibility = "hidden";
+        } else {
+            tableDiv.style.visibility = "visible";
+        }
+        console.log(tableDiv.style.visibility);
+    } else {
+        console.log(keyName);
     }
 });
